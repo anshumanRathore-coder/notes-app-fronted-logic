@@ -47,7 +47,7 @@ export default function SingleNote(props) {
   };
 
   const handleUpdate = async () => {
-    await fetch(`api/notes/updateNote/${id}`, {
+   const response=await fetch(`api/notes/updateNote/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -58,14 +58,25 @@ export default function SingleNote(props) {
         tag: note.tag,
       }),
     });
-    onClose();
-    toast({
-      title: "You note is update successfuly",
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    })
-    updateState({ noteCount: userState.notCount + 1 });
+    const jsonData=await response.json();
+    if (jsonData.success==='true') {
+      onClose();
+      toast({
+        title: "You note is update successfuly",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      updateState({ noteCount: userState.notCount + 1 });
+    }
+    else{
+      toast({
+        title: "Title and description is required",
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   };
   
   const handleInput = (e) => {
